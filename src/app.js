@@ -1,34 +1,31 @@
+const e = require('express');
 const express = require('express');
+const {userAuth, adminAuth} = require('../middlewares/auth'); // Importing the auth middleware
 const app = express(); // Instance of Express application
 
 
-app.get(
-  "/users", 
-  (req, res, next) => {
-    console.log("Handling the router user!!");
-    //res.send("User route accessed!"); // Send a response to the client
-    next(); // Pass control to the next middleware
-  }, 
-  (req, res, next) => {
-    console.log("Handling the route user 2!!");
-    // res.send("2nd Response!"); // Send another response
-    next(); // Pass control to the next middleware
-  },
-  (req, res, next) => {
-    console.log("Handling the route user 3!!");
-    // res.send("3rd Response!"); // Final response sent to the client
-    next(); // Pass control to the next middleware
-  }, 
-  (req, res, next) => {
-    console.log("Handling the route user 4!"); // Send the final response to the client
-    next(); // This will not be called since the response is sent
-  }
-  , (req, res) => {
-    res.send("Handling the route user 5!"); // Final response sent to the client
-  }
-    
+//Handle Authentication for all routes GET, POST, PUT, DELETE
+// app.use("/admin", adminAuth); // Apply adminAuth middleware to all routes starting with /admin
+// app.use("/user", userAuth);
+
+app.post('/user/login', (req, res) => {
+  res.send("User logged in successfully");
+}
 )
 
+app.get('/users/data', userAuth,  (req, res) => {
+  console.log("Handling the users route!!");
+  res.send("User data sent");
+});
+
+app.get('/admin/getAllUsers', adminAuth,  (req, res) => {
+  res.send("All Data sent");
+});
+
+
+  app.get('/admin/deleteUser', (req, res) => {
+  res.send("Deleted a user");
+});
 
 app.listen(8888, () => {
   console.log(`Server is running on port 8888`);
